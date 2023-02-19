@@ -8,9 +8,53 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-export default function App({navigation}) {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+export default function App({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [state, setState] = useState(null);
+  const [body, setBody] = useState(null);
+
+  const handleSignUp = async () => {
+    const body = {
+      email,
+      password,
+    };
+
+    console.log(body);
+
+    try {
+      const response = await fetch(
+        "http://192.168.0.105:8080/api/auth/signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const json = await response.json();
+      setState(json);
+      saveData(JSON.stringify(json.data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const saveData = async (data) => {
+    try {
+      await AsyncStorage.setItem("data", data);
+      navigation.navigate("Open", {
+        loogedIn: true,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  /* this function will retrieve the stored information and put it back into state*/
+
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={require("../assests/cycle.gif")} />
@@ -21,6 +65,7 @@ export default function App({navigation}) {
           placeholder="Email."
           placeholderTextColor="#003f5c"
           onChangeText={(email) => setEmail(email)}
+          value={email}
         />
       </View>
       <View style={styles.inputView}>
@@ -30,6 +75,7 @@ export default function App({navigation}) {
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
+          value={password}
         />
       </View>
       <TouchableOpacity>
@@ -43,7 +89,7 @@ export default function App({navigation}) {
       >
         <Text style={styles.loginText}>Sign Up</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginBtn}>
+      <TouchableOpacity style={styles.loginBtn} onPress={handleSignUp}>
         <Text style={styles.loginText}>LOGIN</Text>
       </TouchableOpacity>
     </View>

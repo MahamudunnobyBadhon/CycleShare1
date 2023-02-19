@@ -4,7 +4,8 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 export default function Location() {
   return (
     <View>
-      {/* <GooglePlacesAutocomplete
+    <Text style={styles.topText}>Google Search Location</Text>
+      <GooglePlacesAutocomplete
         placeholder="Search"
         onPress={(data, details = null) => {
           // 'details' is provided when fetchDetails = true
@@ -15,9 +16,9 @@ export default function Location() {
           key: "SGgbvOOFj9FqoA6HQhrCh_hq5Zo0",
         }}
         onFail={(error) => console.error(error)}
-      /> */}
-{/* 
-      <GooglePlacesAutocomplete
+      />
+
+      {/* <GooglePlacesAutocomplete
         // ref={ref => {
         //   ref?.setAddressText(value);
         // }}
@@ -28,7 +29,7 @@ export default function Location() {
           returnKeyType: "default",
         }}
         onPress={(data, details = null) => {
-          console.log(data);
+          // console.log(data);
         }}
         query={{
           key: "SGgbvOOFj9FqoA6HQhrCh_hq5Zo0",
@@ -88,4 +89,9 @@ export default function Location() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  topText:{
+    fontSize: 20,
+    fontWeight: 500
+  }
+});

@@ -1,30 +1,64 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import MapView from "react-native-maps";
 import { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import imagePath from "../constants/imagePath";
-const Home = ({ navigation }) => {
-  const [state, setState] = useState({
-    pickupCords: {
-      latitude: 22.461669641824294,
-      longitude: 91.96978900134727,
+const Home = ({ navigation, route }) => {
+  const { userLat, userLong, provLat, provLong } = route.params;
+
+  const [pickupCords, setPickupCords] = useState(null);
+
+  const [dropLocationCords, setDropLocationCords] = useState(null);
+
+  useEffect(() => {
+    setPickupCords({
+      latitude: userLat ? userLat : 0,
+      longitude: userLong ? userLong : 0,
       latitudeDelta: 0.09,
       longitudeDelta: 0.04,
-    },
-    dropLocationCords: {
-      latitude: 22.44122221538411,
-      longitude: 91.91001195668615,
-      latitudeDelta: 0.09,
-      longitudeDelta: 0.04,
-    },
-  });
+    }),
+      setDropLocationCords({
+        latitude: provLat ? provLat - 0.000001 : 0,
+        longitude: provLong ? provLong - 0.02 : 0,
+        latitudeDelta: 0.09,
+        longitudeDelta: 0.04,
+      });
+
+    // setPickupCords({
+    //   latitude: 22.463542570971043,
+    //   longitude: 91.97412109802445,
+    //   latitudeDelta: 0.09,
+    //   longitudeDelta: 0.04,
+    // }),
+    //   setDropLocationCords({
+    //     latitude: 22.461004368555464,
+    //     longitude: 91.97890615894671,
+    //     latitudeDelta: 0.09,
+    //     longitudeDelta: 0.04,
+    //   });
+  }, [userLat, userLong, provLat, provLong]);
+  
+  // const [state, setState] = useState({
+  //   pickupCords: {
+  //     latitude: userLat ? userLat : 0,
+  //     longitude: userLong ? userLong : 0,
+  //     latitudeDelta: 0.09,
+  //     longitudeDelta: 0.04,
+  //   },
+  //   dropLocationCords: {
+  //     latitude: provLat ? provLat : 0,
+  //     longitude: provLong ? provLong : 0,
+  //     latitudeDelta: 0.09,
+  //     longitudeDelta: 0.04,
+  //   },
+  // });
 
   const mapRef = useRef();
-  const { pickupCords, dropLocationCords } = state;
+  // const { pickupCords, dropLocationCords } = state;
 
   const onPressLocation = () => {
-    navigation.navigate("location");
+    
   };
 
   return (
@@ -61,9 +95,16 @@ const Home = ({ navigation }) => {
         </MapView>
       </View>
       <View style={styles.bottomCard}>
-        <Text>Where are you going..?</Text>
         <TouchableOpacity onPress={onPressLocation} style={styles.inpuStyle}>
-          <Text>Choose your location</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              color: "black",
+              fontWeight: "bold",
+            }}
+          >
+            Book The Cycle
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -84,7 +125,7 @@ const styles = StyleSheet.create({
   },
 
   inpuStyle: {
-    backgroundColor: "white",
+    backgroundColor: "#8cd1ea",
     borderRadius: 4,
     borderWidth: 1,
     alignItems: "center",
